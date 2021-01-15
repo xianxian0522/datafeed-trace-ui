@@ -1,0 +1,75 @@
+<div class="tree-jaeger">
+  <nz-tree
+      nzBlockNode
+      [nzData]="nodes"
+      (nzClick)="activeNode($event)"
+      (nzDblClick)="openFolder($event)"
+      [nzTreeTemplate]="nzTreeTemplate"
+  ></nz-tree>
+</div>
+<ng-template #nzTreeTemplate let-node let-origin="origin">
+  <div class="custom-node">
+    <span>
+      <nz-collapse>
+        <nz-collapse-panel [nzHeader]="coll" [nzShowArrow]="false">
+          <p style="margin:0;">
+            {{node.title}}
+          </p>
+        </nz-collapse-panel>
+      </nz-collapse>
+      <ng-template #coll>
+        <div style="display: flex; width: 100vw;">
+          <div style="width: 100px;">
+            <i nz-icon [nzType]="node.isExpanded ? 'folder-open' : 'folder'" (click)="openFolder(node)"></i>
+            <span class="folder-name">{{ node.title }}</span>
+          </div>
+          <div class="folder-desc">created by {{ origin.author | lowercase }}</div>
+        </div>
+      </ng-template>
+    </span>
+  </div>
+</ng-template>
+
+
+<div class="jaeger-tree">
+  <div class="tree-left">
+    <ul *ngFor="let node of nodes">
+      <li class="tree-common-left" (click)="showNodeContent()">
+        <i (click)="showNode()" class="tree-common-left-icon" nz-icon nzType="down" nzTheme="outline"></i>
+        <span class="tree-common">{{node.title}}</span>
+        <div *ngIf="isShowContent">sm</div>
+        <ul *ngFor="let child of node.children">
+          <li *ngIf="isShow" class="tree-common">{{child.title}}</li>
+        </ul>
+      </li>
+<!--      <li class="tree-common">2-1-1-->
+<!--        <ul>-->
+<!--          <li class="tree-common">2-1-1-1</li>-->
+<!--        </ul>-->
+<!--      </li>-->
+<!--      <li class="tree-common">3-1-1-->
+<!--        <ul>-->
+<!--          <li class="tree-common">3-1-1-1</li>-->
+<!--        </ul>-->
+<!--      </li>-->
+    </ul>
+  </div>
+  <div class="tree-right">
+    <ul *ngFor="let node of nodes">
+      <li (click)="showNodeContent()">
+        <div class="tree-common center">
+          <div class="tree-common-right" ></div>
+        </div>
+        <div *ngIf="isShowContent">sm</div>
+        <ul *ngFor="let child of node.children">
+          <li *ngIf="isShow" class="tree-common"></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<nz-tree [nzData]="nodes" nzShowLine (nzClick)="activeNode($event)" (nzDblClick)="openFolder($event)" [nzTreeTemplate]="nzTemplate"></nz-tree>
+<ng-template #nzTemplate>
+
+</ng-template>
