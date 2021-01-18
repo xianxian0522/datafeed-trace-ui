@@ -18,6 +18,8 @@ export class JaegerComponent implements OnInit {
       key: '100',
       author: 'NG ZORRO',
       expanded: true,
+      isShow: false,
+      isShowContent: false,
       children: [
         { title: 'leaf 0-0', key: '1000', author: 'NG ZORRO', isLeaf: true },
         { title: 'leaf 0-1', key: '1001', author: 'NG ZORRO', isLeaf: true }
@@ -27,6 +29,8 @@ export class JaegerComponent implements OnInit {
       title: 'parent 1',
       key: '101',
       author: 'NG ZORRO',
+      isShow: false,
+      isShowContent: false,
       children: [
         { title: 'leaf 1-0', key: '1010', author: 'NG ZORRO', isLeaf: true },
         { title: 'leaf 1-1', key: '1011', author: 'NG ZORRO', isLeaf: true }
@@ -68,10 +72,12 @@ export class JaegerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  showNode(): void {
-    this.isShow = !this.isShow;
+  showNode(event, i): void {
+    event.stopPropagation();
+    this.nodes[i].isShow = !this.nodes[i].isShow;
   }
-  showNodeContent(): void {
-    this.isShowContent = !this.isShowContent;
+  showNodeContent(i): void {
+    // this.isShowContent = !this.isShowContent;
+    this.nodes[i].isShowContent = !this.nodes[i].isShowContent;
   }
 }

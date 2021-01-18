@@ -33,36 +33,26 @@
 
 <div class="jaeger-tree">
   <div class="tree-left">
-    <ul *ngFor="let node of nodes">
-      <li class="tree-common-left" (click)="showNodeContent()">
-        <i (click)="showNode()" class="tree-common-left-icon" nz-icon nzType="down" nzTheme="outline"></i>
+    <ul *ngFor="let node of nodes; let i = index">
+      <li class="tree-common-left" (click)="showNodeContent(i)">
+        <i (click)="showNode($event, i)" class="tree-common-left-icon" nz-icon nzType="down" nzTheme="outline"></i>
         <span class="tree-common">{{node.title}}</span>
-        <div *ngIf="isShowContent">sm</div>
+        <div *ngIf="node.isShowContent" class="child-bg">sm</div>
         <ul *ngFor="let child of node.children">
-          <li *ngIf="isShow" class="tree-common">{{child.title}}</li>
+          <li *ngIf="node.isShow" class="tree-common">{{child.title}}</li>
         </ul>
       </li>
-<!--      <li class="tree-common">2-1-1-->
-<!--        <ul>-->
-<!--          <li class="tree-common">2-1-1-1</li>-->
-<!--        </ul>-->
-<!--      </li>-->
-<!--      <li class="tree-common">3-1-1-->
-<!--        <ul>-->
-<!--          <li class="tree-common">3-1-1-1</li>-->
-<!--        </ul>-->
-<!--      </li>-->
     </ul>
   </div>
   <div class="tree-right">
-    <ul *ngFor="let node of nodes">
-      <li (click)="showNodeContent()">
+    <ul *ngFor="let node of nodes; let i = index">
+      <li (click)="showNodeContent(i)">
         <div class="tree-common center">
           <div class="tree-common-right" ></div>
         </div>
-        <div *ngIf="isShowContent">sm</div>
+        <div *ngIf="node.isShowContent" id="child">sm</div>
         <ul *ngFor="let child of node.children">
-          <li *ngIf="isShow" class="tree-common"></li>
+          <li *ngIf="node.isShow" class="tree-common"></li>
         </ul>
       </li>
     </ul>
@@ -73,3 +63,367 @@
 <ng-template #nzTemplate>
 
 </ng-template>
+
+<div class="trace-timeline-viewer">
+  <div class="flex-row timeline-headerRow">
+    <div style="flex-basis: 25%;max-width: 25%;" class="ub-relative ub-flex ub-px2">
+      <h3 class="timeline-headerRow-title">section & section</h3>
+      <div class="timeline-collapser">
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="down" nzTheme="outline"></i>
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="right" nzTheme="outline"></i>
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="caret-down" nzTheme="outline"></i>
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="caret-right" nzTheme="outline"></i>
+      </div>
+    </div>
+    <div style="flex-basis: 75%;max-width: 75%;" class="ub-relative">
+      <div class="timeline-viewing-layer"></div>
+      <div class="ticks">
+        <div style="left: 0%;" class="ticks-tick">
+          <span class="ticks-tickLabel">0ms</span>
+        </div>
+        <div style="left: 25%;" class="ticks-tick">
+          <span class="ticks-tickLabel">250ms</span>
+        </div>
+        <div style="left: 50%;" class="ticks-tick">
+          <span class="ticks-tickLabel">500ms</span>
+        </div>
+        <div style="left: 75%;" class="ticks-tick">
+          <span class="ticks-tickLabel">750ms</span>
+        </div>
+        <div style="left: 100%;" class="ticks-tick">
+          <span class="ticks-tickLabel">1s</span>
+        </div>
+      </div>
+    </div>
+    <div class="vertical-resizer">
+      <div style="left: 25%;" class="vertical-resizer-gripIcon"></div>
+      <div style="left: 25%;" class="vertical-resizer-dragger"></div>
+    </div>
+  </div>
+  <div class="virtualized-traceView-spans">
+    <div style="position: relative;">
+      <div style="position: relative;height: 424px;">
+        <div style="position: absolute;top: 0px;margin: 0px;padding: 0px;" class="virtualized-traceView-rowsWrapper">
+          <div style="height: 29px;top: 0px;position: absolute;" class="virtualized-traceView-row">
+            <div class="flex-row span-row is-expanded">
+              <div style="flex-basis: 25%; max-width: 25%;" class="ub-relative span-name-column">
+                <div class="span-name-wrapper">
+                <span class="span-tree-offset">
+                  <span class="span-tree-offset-indentGuide"></span>
+                  <span class="span-tree-offset-iconWrapper">
+                    <i style="vertical-align: middle;" nz-icon nzType="down" nzTheme="outline"></i>
+                  </span>
+                </span>
+                  <a style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
+                    <span class="span-svc-name">jaeger</span>
+                    <small class="endpoint-name">span_root</small>
+                  </a>
+                </div>
+              </div>
+              <div style="cursor: pointer;flex-basis: 75%;max-width: 75%;" class="ub-relative span-view">
+                <div class="ticks">
+                  <div class="ticks-tick" style="left: 0%"></div>
+                  <div class="ticks-tick" style="left: 25%"></div>
+                  <div class="ticks-tick" style="left: 50%"></div>
+                  <div class="ticks-tick" style="left: 75%"></div>
+                  <div class="ticks-tick" style="left: 100%"></div>
+                </div>
+                <div class="span-bar-wrapper">
+                  <div class="span-bar" style="background: rgb(23, 184, 190);left: 0%;width: 100%;">
+                    <div class="span-bar-label is-right">1s</div>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="virtualized-traceView-row" style="height: 144px;top: 29px;position: absolute;z-index: 1;">
+            <div class="flex-row detail-row">
+              <div class="ub-relative" style="flex-basis: 25%;max-width: 25%;">
+                <span class="span-tree-offset is-parent">
+                  <span class="span-tree-offset-indentGuide"></span>
+                </span>
+                <span>
+                  <span style="border-color: rgb(23, 184, 190);" class="detail-row-expanded-accent"></span>
+                </span>
+              </div>
+              <div class="ub-relative" style="flex-basis: 75%;max-width: 75%;">
+                <div class="detail-info-wrapper" style="border-top-color: rgb(23, 184, 190);">
+                  <div>
+                    <div class="ub-flex ub-items-center">
+                      <h2 class="ub-flex-auto ub-m0">span_root</h2>
+                      <ul class="labeled-list ub-tx-right-align">
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">services:</span>
+                            <strong>jaeger-client</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">duration:</span>
+                            <strong>1s</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">start time:</span>
+                            <strong>0um</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                      </ul>
+                    </div>
+                    <div class="span-detail-divider ant-divider-horizontal ub-my1"></div>
+                    <div>
+                      <div>
+                        <div class="u-tx-ellipsis">
+                          <div class="accordian-key-values-header">
+                            <i style="vertical-align: middle;" class="u-align-icon" nz-icon nzType="right" nzTheme="outline"></i>
+                            <strong>Tags:</strong>
+                            <ul class="accordian-key-values-summary">
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.format</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                proto
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.params</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                true
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.type</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                const
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="ub-mb1 u-tx-ellipsis">
+                          <div class="accordian-key-values-header">
+                            <i style="vertical-align: middle;" class="u-align-icon" nz-icon nzType="right" nzTheme="outline"></i>
+                            <strong>Process:</strong>
+                            <ul class="accordian-key-values-summary">
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.uiid</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                proto
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.hostname</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                zhangsan
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.ip</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                172.16.18.108
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.jaeger</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                const
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <small class="span-detail-debugInfo">
+                        <span class="span-detail-debugLabel">spanId:</span>
+                        id2938e7374
+                        <button nz-button class="copy-icon" nzSize="small"><i nz-icon nzType="link" nzTheme="outline"></i></button>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="height: 29px;top: 173px; position: absolute;" class="virtualized-traceView-row">
+            <div class="flex-row span-row is-expanded">
+              <div style="flex-basis: 25%; max-width: 25%;" class="ub-relative span-name-column">
+                <div class="span-name-wrapper">
+                  <span class="span-tree-offset">
+                    <span class="span-tree-offset-indentGuide"></span>
+                    <span class="span-tree-offset-indentGuide"></span>
+                  </span>
+                  <a style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
+                    <span class="span-svc-name">jaeger</span>
+                    <small class="endpoint-name">span_root</small>
+                  </a>
+                </div>
+              </div>
+              <div style="cursor: pointer;flex-basis: 75%;max-width: 75%;" class="ub-relative span-view">
+                <div class="ticks">
+                  <div class="ticks-tick" style="left: 0%"></div>
+                  <div class="ticks-tick" style="left: 25%"></div>
+                  <div class="ticks-tick" style="left: 50%"></div>
+                  <div class="ticks-tick" style="left: 75%"></div>
+                  <div class="ticks-tick" style="left: 100%"></div>
+                </div>
+                <div class="span-bar-wrapper">
+                  <div class="span-bar" style="background: rgb(23, 184, 190);left: 0%;width: 50%;">
+                    <div class="span-bar-label is-right">500ms</div>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="virtualized-traceView-row" style="height: 144px;top: 202px;position: absolute;z-index: 1;">
+            <div class="flex-row detail-row">
+              <div class="ub-relative" style="flex-basis: 25%;max-width: 25%;">
+                <span class="span-tree-offset">
+                  <span class="span-tree-offset-indentGuide"></span>
+                  <span class="span-tree-offset-indentGuide"></span>
+                </span>
+                <span>
+                  <span style="border-color: rgb(23, 184, 190);" class="detail-row-expanded-accent"></span>
+                </span>
+              </div>
+              <div class="ub-relative" style="flex-basis: 75%;max-width: 75%;">
+                <div class="detail-info-wrapper" style="border-top-color: rgb(23, 184, 190);">
+                  <div>
+                    <div class="ub-flex ub-items-center">
+                      <h2 class="ub-flex-auto ub-m0">span_root</h2>
+                      <ul class="labeled-list ub-tx-right-align">
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">services:</span>
+                            <strong>jaeger-client</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">duration:</span>
+                            <strong>1s</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">start time:</span>
+                            <strong>0um</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                      </ul>
+                    </div>
+                    <div class="span-detail-divider ant-divider-horizontal ub-my1"></div>
+                    <div>
+                      <div>
+                        <div class="u-tx-ellipsis">
+                          <div class="accordian-key-values-header">
+                            <i style="vertical-align: middle;" class="u-align-icon" nz-icon nzType="right" nzTheme="outline"></i>
+                            <strong>Tags:</strong>
+                            <ul class="accordian-key-values-summary">
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.format</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                proto
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.params</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                true
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.type</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                const
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="ub-mb1 u-tx-ellipsis">
+                          <div class="accordian-key-values-header">
+                            <i style="vertical-align: middle;" class="u-align-icon" nz-icon nzType="right" nzTheme="outline"></i>
+                            <strong>Process:</strong>
+                            <ul class="accordian-key-values-summary">
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.uiid</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                proto
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.hostname</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                zhangsan
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.ip</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                172.16.18.108
+                              </li>
+                              <li class="accordian-key-values-summaryItem">
+                                <span class="accordian-key-values-summaryLabel">span.jaeger</span>
+                                <span class="accordian-key-values-summaryDelim">=</span>
+                                const
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <small class="span-detail-debugInfo">
+                        <span class="span-detail-debugLabel">spanId:</span>
+                        id2938e7374
+                        <button nz-button class="copy-icon" nzSize="small"><i nz-icon nzType="link" nzTheme="outline"></i></button>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="height: 29px;top: 346px; position: absolute;" class="virtualized-traceView-row">
+            <div class="flex-row span-row is-expanded">
+              <div style="flex-basis: 25%; max-width: 25%;" class="ub-relative span-name-column">
+                <div class="span-name-wrapper">
+                  <span class="span-tree-offset">
+                    <span class="span-tree-offset-indentGuide"></span>
+                    <span class="span-tree-offset-indentGuide"></span>
+                  </span>
+                  <a style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
+                    <span class="span-svc-name">jaeger</span>
+                    <small class="endpoint-name">span_root</small>
+                  </a>
+                </div>
+              </div>
+              <div style="cursor: pointer;flex-basis: 75%;max-width: 75%;" class="ub-relative span-view">
+                <div class="ticks">
+                  <div class="ticks-tick" style="left: 0%"></div>
+                  <div class="ticks-tick" style="left: 25%"></div>
+                  <div class="ticks-tick" style="left: 50%"></div>
+                  <div class="ticks-tick" style="left: 75%"></div>
+                  <div class="ticks-tick" style="left: 100%"></div>
+                </div>
+                <div class="span-bar-wrapper">
+                  <div class="span-bar" style="background: rgb(23, 184, 190);left: 50%;width: 50%;">
+                    <div class="span-bar-label is-right">500ms</div>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
