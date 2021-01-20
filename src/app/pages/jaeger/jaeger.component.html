@@ -115,13 +115,13 @@
                         <i style="vertical-align: middle;" nz-icon nzType="down" nzTheme="outline"></i>
                       </span>
                     </span>
-                    <a (click)="isChildExpanded(i)" style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
+                    <a (click)="isChildExpanded(i, 0)" style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
                       <span class="span-svc-name">jaeger</span>
                       <small class="endpoint-name">span_root</small>
                     </a>
                   </div>
                 </div>
-                <div (click)="isChildExpanded(i)" style="cursor: pointer;flex-basis: 75%;max-width: 75%;" class="ub-relative span-view">
+                <div (click)="isChildExpanded(i, 0)" style="cursor: pointer;flex-basis: 75%;max-width: 75%;" class="ub-relative span-view">
                   <div class="ticks">
                     <div class="ticks-tick" style="left: 0%"></div>
                     <div class="ticks-tick" style="left: 25%"></div>
@@ -252,7 +252,7 @@
           </div>
           <div *ngFor="let child of node.children; let idx = index">
             <div *ngIf="node.isShow" style="height: 29px;top: 173px; position: absolute;" class="virtualized-traceView-row">
-              <div class="flex-row span-row is-expanded">
+              <div class="flex-row span-row is-expanded" (click)="isChildExpanded(idx, 1)">
                 <div style="flex-basis: 25%; max-width: 25%;" class="ub-relative span-name-column">
                   <div class="span-name-wrapper">
                   <span class="span-tree-offset">

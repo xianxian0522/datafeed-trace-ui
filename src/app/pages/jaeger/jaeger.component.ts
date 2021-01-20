@@ -84,7 +84,9 @@ export class JaegerComponent implements OnInit {
     event.stopPropagation();
     this.nodes[i].isShow = !this.nodes[i].isShow;
   }
-  isChildExpanded(i): void {
-    this.nodes[i].isShowContent = !this.nodes[i].isShowContent;
+  isChildExpanded(i, num): void {
+    if (num === 0) {
+      this.nodes[i].isShowContent = !this.nodes[i].isShowContent;
+    }
   }
 }
