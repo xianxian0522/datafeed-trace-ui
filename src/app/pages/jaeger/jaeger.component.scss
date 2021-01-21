@@ -411,6 +411,9 @@ ul {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.accordian-key-values-header:hover {
+  background-color: #ececec;
+}
 .u-align-icon {
   margin: -.2rem .25rem 0 0;
 }
@@ -452,4 +455,59 @@ ul {
   height: 100%;
   overflow: hidden;
   padding: 0;
+}
+.key-value-table {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  margin-bottom: .7em;
+  max-height: 450px;
+  overflow: auto;
+}
+.u-width-100 {
+  width: 100%;
+}
+.key-value-table-body {
+  vertical-align: initial;
+}
+.key-value-table-row:nth-child(even) {
+ background-color: #f5f5f5;
+}
+.key-value-table-row>td {
+  padding: .25rem .5rem;
+  vertical-align: top;
+}
+.key-value-table-keyColumn {
+  color: #888888;
+  white-space: pre;
+  width: 125px;
+}
+.key-value-table-copyColumn {
+  text-align: right;
+}
+.ub-inline-block {
+  display: inline-block;
+}
+.json-markup {
+  line-height: 17px;
+  font-size: 13px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.json-markup-bool {
+  color: #b22222;
+}
+.json-markup-string {
+  color: teal;
+}
+.copyIcon, .copyIcon:hover {
+  background-color: initial;
+  border: none;
+  color: inherit;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+.key-value-table-row:not(:hover)>.key-value-table-copyColumn>.key-value-table-copyIcon {
+  visibility: hidden;
 }

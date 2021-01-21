@@ -19,6 +19,7 @@ import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzButtonModule} from 'ng-zorro-antd/button';
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
 
 registerLocaleData(zh);
 
@@ -41,6 +42,7 @@ registerLocaleData(zh);
     NzCollapseModule,
     NzIconModule,
     NzButtonModule,
+    NzToolTipModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]

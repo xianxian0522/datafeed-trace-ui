@@ -20,9 +20,72 @@ export class JaegerComponent implements OnInit {
       expanded: true,
       isShow: false,
       isShowContent: false,
+      tags: [
+        {
+          name: 'Tags',
+          tagsContent: [
+            {name: 'internal.span.format', value: 'proto', isBool: false},
+            {name: 'sampler.param', value: 'true', isBool: true},
+            {name: 'sampler.type', value: 'const', isBool: false},
+          ],
+          isTags: false,
+        },
+        {
+          name: 'Process',
+          tagsContent: [
+            {name: 'internal.span.format', value: 'proto', isBool: false},
+            {name: 'sampler.param', value: 'true', isBool: true},
+            {name: 'sampler.type', value: 'const', isBool: false},
+          ],
+          isTags: false,
+        },
+      ],
       children: [
-        { title: 'leaf 0-0', key: '1000', author: 'NG ZORRO', isLeaf: true },
-        { title: 'leaf 0-1', key: '1001', author: 'NG ZORRO', isLeaf: true }
+        {
+          title: 'leaf 0-0', key: '1000', author: 'NG ZORRO', isLeaf: true, left: '0%',
+          tags: [
+            {
+              name: 'Tags',
+              tagsContent: [
+                {name: 'internal.span.format', value: 'proto', isBool: false},
+                {name: 'reply', value: 'foo3Reply', isBool: false},
+                {name: 'request', value: 'Hello foo3', isBool: false},
+              ],
+              isTags: false,
+            },
+            {
+              name: 'Process',
+              tagsContent: [
+                {name: 'internal.span.format', value: 'proto', isBool: false},
+                {name: 'reply', value: 'foo3Reply', isBool: false},
+                {name: 'request', value: 'Hello foo3', isBool: false},
+              ],
+              isTags: false,
+            },
+          ],
+        },
+        { title: 'leaf 0-1', key: '1001', author: 'NG ZORRO', isLeaf: false, left: '50%',
+          tags: [
+            {
+              name: 'Tags',
+              tagsContent: [
+                {name: 'client-uuid', value: '6fed454859ca9374', isBool: false},
+                {name: 'hostname', value: 'foo3Reply', isBool: false},
+                {name: 'jaeger.version', value: 'Go-2.5.0', isBool: false},
+              ],
+              isTags: false,
+            },
+            {
+              name: 'Process',
+              tagsContent: [
+                {name: 'client-uuid', value: '6fed454859ca9374', isBool: false},
+                {name: 'hostname', value: 'foo3Reply', isBool: false},
+                {name: 'jaeger.version', value: 'Go-2.5.0', isBool: false},
+              ],
+              isTags: false,
+            },
+          ],
+        }
       ]
     },
     {
@@ -31,9 +94,73 @@ export class JaegerComponent implements OnInit {
       author: 'NG ZORRO',
       isShow: false,
       isShowContent: false,
+      tags: [
+        {
+          name: 'Tags',
+          tagsContent: [
+            {name: 'internal.span.format', value: 'proto2', isBool: false},
+            {name: 'sampler.param', value: 'true', isBool: true},
+            {name: 'sampler.type', value: 'const2', isBool: false},
+          ],
+          isTags: false,
+        },
+        {
+          name: 'Process',
+          tagsContent: [
+            {name: 'internal.span.format', value: 'proto2', isBool: false},
+            {name: 'sampler.param', value: 'true', isBool: true},
+            {name: 'sampler.type', value: 'const2', isBool: false},
+          ],
+          isTags: false,
+        },
+      ],
       children: [
-        { title: 'leaf 1-0', key: '1010', author: 'NG ZORRO', isLeaf: true },
-        { title: 'leaf 1-1', key: '1011', author: 'NG ZORRO', isLeaf: true }
+        {
+          title: 'leaf 1-0', key: '1010', author: 'NG ZORRO', isLeaf: true, left: '50%',
+          tags: [
+            {
+              name: 'Tags',
+              tagsContent: [
+                {name: 'internal.span.format', value: 'proto2', isBool: false},
+                {name: 'reply', value: 'foo3Reply2', isBool: false},
+                {name: 'request', value: 'Hello foo2', isBool: false},
+              ],
+              isTags: false,
+            },
+            {
+              name: 'Process',
+              tagsContent: [
+                {name: 'internal.span.format', value: 'proto2', isBool: false},
+                {name: 'reply', value: 'foo3Reply2', isBool: false},
+                {name: 'request', value: 'Hello foo2', isBool: false},
+              ],
+              isTags: false,
+            },
+          ],
+        },
+        {
+          title: 'leaf 1-1', key: '1011', author: 'NG ZORRO', isLeaf: true, left: '0%',
+          tags: [
+            {
+              name: 'Tags',
+              tagsContent: [
+                {name: 'client-uuid2', value: '6fed454859ca9374', isBool: false},
+                {name: 'hostname2', value: 'foo3Reply2', isBool: false},
+                {name: 'jaeger.version2', value: 'Go-2.5.0', isBool: false},
+              ],
+              isTags: false,
+            },
+            {
+              name: 'Process',
+              tagsContent: [
+                {name: 'client-uuid2', value: '6fed454859ca9374', isBool: false},
+                {name: 'hostname2', value: 'foo3Reply2', isBool: false},
+                {name: 'jaeger.version2', value: 'Go-2.5.0', isBool: false},
+              ],
+              isTags: false,
+            },
+          ],
+        }
       ]
     }
   ];
@@ -84,9 +211,18 @@ export class JaegerComponent implements OnInit {
     event.stopPropagation();
     this.nodes[i].isShow = !this.nodes[i].isShow;
   }
-  isChildExpanded(i, num): void {
-    if (num === 0) {
+  isChildExpanded(i, num?): void {
+    if (num !== undefined) {
+      this.nodes[i].children[num].isLeaf = !this.nodes[i].children[num].isLeaf;
+    } else {
       this.nodes[i].isShowContent = !this.nodes[i].isShowContent;
+    }
+  }
+  showTags(i, num, childId?): void {
+    if (childId !== undefined) {
+      this.nodes[i].children[num].tags[childId].isTags = !this.nodes[i].children[num].tags[childId].isTags;
+    } else {
+      this.nodes[i].tags[num].isTags = !this.nodes[i].tags[num].isTags;
     }
   }
 }
