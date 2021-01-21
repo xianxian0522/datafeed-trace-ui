@@ -16,7 +16,7 @@ export class JaegerComponent implements OnInit {
     {
       title: 'jaegerClient-demo1',
       subTitle: 'span_root',
-      isShow: false,
+      isShow: true,
       isShowContent: false,
       tags: [
         {
