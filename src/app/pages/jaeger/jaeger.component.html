@@ -112,7 +112,8 @@
                     <span class="span-tree-offset" (click)="isChildContent($event, i)">
                       <span class="span-tree-offset-indentGuide"></span>
                       <span class="span-tree-offset-iconWrapper">
-                        <i style="vertical-align: middle;" nz-icon nzType="down" nzTheme="outline"></i>
+                        <i *ngIf="!node.isShow" style="vertical-align: middle;" nz-icon nzType="right" nzTheme="outline"></i>
+                        <i *ngIf="node.isShow" style="vertical-align: middle;" nz-icon nzType="down" nzTheme="outline"></i>
                       </span>
                     </span>
                     <a (click)="isChildExpanded(i)" style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
