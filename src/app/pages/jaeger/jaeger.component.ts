@@ -14,10 +14,8 @@ export class JaegerComponent implements OnInit {
   activatedNode?: NzTreeNode;
   nodes = [
     {
-      title: 'parent 0',
-      key: '100',
-      author: 'NG ZORRO',
-      expanded: true,
+      title: 'jaegerClient-demo1',
+      subTitle: 'span_root',
       isShow: false,
       isShowContent: false,
       tags: [
@@ -42,7 +40,8 @@ export class JaegerComponent implements OnInit {
       ],
       children: [
         {
-          title: 'leaf 0-0', key: '1000', author: 'NG ZORRO', isLeaf: true, left: '0%',
+          title: 'jaegerClient-demo',
+          subTitle: 'span_root3', isLeaf: true, left: '0%', width: '50%',
           tags: [
             {
               name: 'Tags',
@@ -64,7 +63,9 @@ export class JaegerComponent implements OnInit {
             },
           ],
         },
-        { title: 'leaf 0-1', key: '1001', author: 'NG ZORRO', isLeaf: false, left: '50%',
+        {
+          title: 'jaegerClient-demo',
+          subTitle: 'span_root4', isLeaf: false, left: '50%', width: '20%',
           tags: [
             {
               name: 'Tags',
@@ -89,9 +90,8 @@ export class JaegerComponent implements OnInit {
       ]
     },
     {
-      title: 'parent 1',
-      key: '101',
-      author: 'NG ZORRO',
+      title: 'jaegerClient-demo2',
+      subTitle: 'span_root',
       isShow: false,
       isShowContent: false,
       tags: [
@@ -116,7 +116,8 @@ export class JaegerComponent implements OnInit {
       ],
       children: [
         {
-          title: 'leaf 1-0', key: '1010', author: 'NG ZORRO', isLeaf: true, left: '50%',
+          title: 'jaegerClient-demo2',
+          subTitle: 'span_root3', isLeaf: true, left: '50%', width: '50%',
           tags: [
             {
               name: 'Tags',
@@ -139,7 +140,8 @@ export class JaegerComponent implements OnInit {
           ],
         },
         {
-          title: 'leaf 1-1', key: '1011', author: 'NG ZORRO', isLeaf: true, left: '0%',
+          title: 'jaegerClient-demo2',
+          subTitle: 'span_root4', isLeaf: true, left: '0%', width: '50%',
           tags: [
             {
               name: 'Tags',
