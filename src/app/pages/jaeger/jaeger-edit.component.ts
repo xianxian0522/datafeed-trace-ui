@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzFormatEmitEvent, NzTreeNode} from 'ng-zorro-antd/tree';
+import {ActivatedRoute} from '@angular/router';
+import {JaegerRepository} from '../../share/services/jaeger.repository';
+import {JaegerResponse} from '../../share/models/jaeger';
 
 @Component({
   selector: 'app-jaeger-edit',
@@ -9,7 +12,11 @@ import {NzFormatEmitEvent, NzTreeNode} from 'ng-zorro-antd/tree';
 })
 export class JaegerEditComponent implements OnInit {
 
-  constructor(private nzContextMenuService: NzContextMenuService) { }
+  constructor(
+    private nzContextMenuService: NzContextMenuService,
+    private activatedRoute: ActivatedRoute,
+    private jaegerRepository: JaegerRepository,
+  ) { }
 
   activatedNode?: NzTreeNode;
   nodes = [
@@ -168,6 +175,7 @@ export class JaegerEditComponent implements OnInit {
   ];
   isShow = false;
   isShowContent = false;
+  traceData: any;
 
   openFolder(data: NzTreeNode | NzFormatEmitEvent): void {
     // do something if u want
@@ -199,6 +207,13 @@ export class JaegerEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe(params => {
+      const id = params.get('id');
+      this.jaegerRepository.queryOneById(id).subscribe(res => {
+        this.traceData = res.data;
+        console.log(this.traceData, 'trace');
+      });
+    });
   }
 
   showNode(event, i): void {

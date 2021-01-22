@@ -1,0 +1,67 @@
+<div class="jaeger-list">
+  <div nz-form nzLayout="inline" [formGroup]="searchForm" class="jaeger-list-header">
+    <button nz-button nzType="primary" (click)="refresh.emit()">刷新</button>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="10" nzNoColon>数量</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input formControlName="size" placeholder="size" nzSize="small">
+      </nz-form-control>
+    </nz-form-item >
+    <nz-form-item>
+      <nz-form-label [nzSpan]="10" nzNoColon>开始时间</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <nz-date-picker
+            nzSize="small"
+            nzShowTime
+            nzFormat="yyyy-MM-dd HH:mm:ss"
+            formControlName="startTime"
+            nzPlaceHolder="startTime"
+        ></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item >
+    <nz-form-item>
+      <nz-form-label [nzSpan]="10" nzNoColon>结束时间</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <nz-date-picker
+            nzSize="small"
+            nzShowTime
+            nzFormat="yyyy-MM-dd HH:mm:ss"
+            formControlName="endTime"
+            nzPlaceHolder="endTime"
+        ></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item >
+  </div>
+  <div>图表</div>
+  <ul class="jaeger-ub-list-reset">
+    <li class="jaeger-ub-my3" *ngFor="let jaeger of jaegerList; let i = index">
+      <div class="j-result-item" nz-button>
+        <div class="j-result-item-title">
+          <a [routerLink]="'/trace/' + jaeger._source.requestId" class="j-result-item-title-item j-ub-flex-auto">
+            <span class="j-result-item-key" *ngFor="let time of jaeger._source.allTimeCostArr">
+              <span>{{time.name}}</span>
+              <span>{{time.value}}</span>
+            </span>
+            <span class="j-ub-right">ms</span>
+          </a>
+        </div>
+        <a [routerLink]="'/trace/' + jaeger._source.requestId">
+          <div class="j-ant-row">
+            <div class="j-ant-col-16 j-ub-p3">
+              <div class="j-ant-tag j-result-item-serviceTag">{{ jaeger._source.requestId }}</div>
+            </div>
+            <div class="j-ant-col-4 j-ub-p3 j-ub-tx-right-align">
+              <div>
+                <span>{{ jaeger._source.createTime | date: 'yyyy-MM-dd' }}</span>
+                <div class="j-ant-divider j-ant-divider-vertical"></div>
+              </div>
+              <div>{{ jaeger._source.createTime | date: 'HH:mm:ss' }} {{jaeger._source.timeIsAm}}</div>
+              <small>{{ jaeger._source.timeAgo }}</small>
+            </div>
+          </div>
+        </a>
+      </div>
+    </li>
+  </ul>
+  <nz-empty nzNotFoundImage="simple" *ngIf="jaegerList.length === 0;"></nz-empty>
+</div>
