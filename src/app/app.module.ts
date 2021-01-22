@@ -20,13 +20,17 @@ import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
+import { JaegerEditComponent } from './pages/jaeger/jaeger-edit.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
     AppComponent,
-    JaegerComponent
+    JaegerComponent,
+    JaegerEditComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
