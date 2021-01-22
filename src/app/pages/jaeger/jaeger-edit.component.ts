@@ -4,6 +4,7 @@ import {NzFormatEmitEvent, NzTreeNode} from 'ng-zorro-antd/tree';
 import {ActivatedRoute} from '@angular/router';
 import {JaegerRepository} from '../../share/services/jaeger.repository';
 import {JaegerResponse} from '../../share/models/jaeger';
+import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-jaeger-edit',
@@ -211,7 +212,43 @@ export class JaegerEditComponent implements OnInit {
       const id = params.get('id');
       this.jaegerRepository.queryOneById(id).subscribe(res => {
         this.traceData = res.data;
-        console.log(this.traceData, 'trace');
+        const service = this.traceData.service;
+        const one = Object.keys(service).map(key => {
+          let i = 0;
+          if (!key.includes('_')) {
+            i++;
+            return Object.keys(service).filter(k => k !== key);
+          }
+        }).filter(kk => kk);
+        console.log(one);
+
+        Object.keys(service).map(key => {
+          let i = 0;
+          if (!key.includes('_')) {
+            i++;
+            const twos = Object.keys(service).filter(k => k !== key);
+            twos.map(two => {
+              if (two.includes(key)) {
+                i++;
+                console.log(two, i, key, '2');
+                const three = twos.filter(t => t !== two );
+                three.map(th => {
+                  if (th.includes(two.split('_')[1])) {
+                    i++;
+                    console.log(th, i, '3');
+                    const four = three.filter(f => f !== th);
+                    four.map(fo => {
+                      if (fo.split('_').includes(th.split('_')[1])) {
+                        i++;
+                        console.log(fo, i, '4', th);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
       });
     });
   }
