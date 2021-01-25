@@ -33,6 +33,18 @@
   border-bottom: 1px solid #d8d8d8;
   display: flex;
 }
+.j-result-item-error {
+  border-bottom: 1px solid #ffa39e;
+  display: flex;
+  color: #f5222d;
+  background: #fff1f0;
+}
+.j-ub-center {
+  padding: 0.5rem;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+}
 .j-result-item a {
   color: #11939a;
 }

@@ -36,13 +36,18 @@
   <ul class="jaeger-ub-list-reset">
     <li class="jaeger-ub-my3" *ngFor="let jaeger of jaegerList; let i = index">
       <div class="j-result-item" nz-button>
-        <div class="j-result-item-title">
+        <div class="j-result-item-title" *ngIf="!jaeger._source.isError">
           <a [routerLink]="'/trace/' + jaeger._source.requestId" class="j-result-item-title-item j-ub-flex-auto">
             <span class="j-result-item-key" *ngFor="let time of jaeger._source.allTimeCostArr">
               <span>{{time.name}}</span>
               <span>{{time.value}}</span>
             </span>
             <span class="j-ub-right">ms</span>
+          </a>
+        </div>
+        <div class="j-result-item-error" *ngIf="jaeger._source.isError">
+          <a [routerLink]="'/trace/' + jaeger._source.requestId" class="j-result-item-title-item j-ub-flex-auto">
+            <span class="j-ub-center">{{jaeger._source.message}}</span>
           </a>
         </div>
         <a [routerLink]="'/trace/' + jaeger._source.requestId">

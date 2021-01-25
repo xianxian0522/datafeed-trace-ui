@@ -174,7 +174,6 @@ export class JaegerEditComponent implements OnInit {
   ];
   isShow = false;
   isShowContent = false;
-  traceData: any;
   test = [
     {
       title: 'jaegerClient-root',
@@ -242,6 +241,7 @@ export class JaegerEditComponent implements OnInit {
     }
   ];
   jaegerData = [];
+  maxLength = 0;
 
   openFolder(data: NzTreeNode | NzFormatEmitEvent): void {
     // do something if u want
@@ -276,8 +276,11 @@ export class JaegerEditComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       this.jaegerRepository.queryOneById(id).subscribe(res => {
-        this.traceData = res.data;
-        const service = this.traceData.service;
+        const traceData = res.data;
+        const service = traceData.service;
+        if (Object.keys(traceData.allTimeCost).length !== 0) {
+          this.maxLength = Math.max.apply(Math, Object.keys(traceData.allTimeCost).map(key => traceData.allTimeCost[key]));
+        }
         const one = Object.keys(service).map(key => {
           let i = 0;
           if (!key.includes('_')) {
@@ -319,7 +322,7 @@ export class JaegerEditComponent implements OnInit {
 
         this.jaegerData = this.getJsonTree(Object.keys(service), '', service);
         this.setIndex(this.jaegerData, 1);
-        console.log('>>>', this.jaegerData);
+        console.log('>>>', this.jaegerData, this.maxLength);
       });
     });
   }
@@ -327,8 +330,13 @@ export class JaegerEditComponent implements OnInit {
   setIndex(nodes: Array<any>, index: number): void {
     nodes.forEach(item => {
       item.index = index;
-      item.width = (item.length / item.tailToNowGap) * 100 + '%';
-      item.left = (item.firstToNowGap / item.tailToNowGap) * 100 + '%';
+      if (this.maxLength === 0) {
+        item.width = '0%';
+        item.left = '0%';
+      } else {
+        item.width = (item.length / this.maxLength) * 100 + '%';
+        item.left = (item.firstToNowGap / this.maxLength) * 100 + '%';
+      }
       this.setIndex(item.children, index + 1);
     });
   }

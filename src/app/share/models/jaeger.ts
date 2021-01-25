@@ -8,6 +8,8 @@ export interface Jaeger {
         createTime?: number;
         requestId?: string;
         timeIsAm?: string;
+        isError?: boolean;
+        message?: string;
       }
     }
   ];
