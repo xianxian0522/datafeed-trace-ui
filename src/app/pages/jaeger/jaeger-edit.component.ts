@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzFormatEmitEvent, NzTreeNode} from 'ng-zorro-antd/tree';
 import {ActivatedRoute} from '@angular/router';
 import {JaegerRepository} from '../../share/services/jaeger.repository';
-import {JaegerResponse} from '../../share/models/jaeger';
-import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-jaeger-edit',
@@ -287,7 +285,6 @@ export class JaegerEditComponent implements OnInit {
             return Object.keys(service).filter(k => k !== key);
           }
         }).filter(kk => kk);
-        console.log(one);
 
         Object.keys(service).map(key => {
           let i = 0;
@@ -298,21 +295,19 @@ export class JaegerEditComponent implements OnInit {
             twos.map(two => {
               if (two.includes(key)) {
                 i++;
-                console.log(two, i, key, '2');
                 this.jaegerData[0].children = [{...service[two], index: i}];
                 const three = twos.filter(t => t !== two );
+                // d = this.getJsonTree(three, two, service);
+                // console.log(d, 'de');
                 three.map(th => {
                   if (th.includes(two.split('_')[1])) {
                     i++;
                     this.jaegerData[0].children[0].children = [{...service[th], index: i}];
-                    console.log(th, i, '3');
                     const four = three.filter(f => f !== th);
                     four.map(fo => {
                       if (fo.split('_').includes(th.split('_')[1])) {
                         i++;
                         this.jaegerData[0].children[0].children[0].children = [{...service[fo], index: i}];
-                        console.log(fo, i, '4', th);
-                        console.log(this.jaegerData, 'data');
                       }
                     });
                   }
@@ -321,16 +316,37 @@ export class JaegerEditComponent implements OnInit {
             });
           }
         });
+
+        this.jaegerData = this.getJsonTree(Object.keys(service), '', service);
+        this.setIndex(this.jaegerData, 1);
+        console.log('>>>', this.jaegerData);
       });
     });
   }
 
-  getJsonTree(data, preKey, nextKey): any{
+  setIndex(nodes: Array<any>, index: number): void {
+    nodes.forEach(item => {
+      item.index = index;
+      item.width = (item.length / item.tailToNowGap) * 100 + '%';
+      item.left = (item.firstToNowGap / item.tailToNowGap) * 100 + '%';
+      this.setIndex(item.children, index + 1);
+    });
+  }
+
+  getJsonTree(keys, key, service): any{
     const itemArr = [];
-    data.map((item, i) => {
-      const node = data[i];
-      if ( node.parentId === preKey ){
-        const newNode = {children: this.getJsonTree(data, node.id, nextKey)};
+    keys.map((item, i) => {
+      if (!item.includes('_')) {
+        const twos = keys.filter(k => k !== item);
+        const newNode = {...service[item], children: this.getJsonTree(twos, item, service)};
+        itemArr.push(newNode);
+      } else if (item.split('_')[0] === key) {
+        const twos = keys.filter(k => k !== item);
+        const newNode = {...service[item], children: this.getJsonTree(twos, item, service)};
+        itemArr.push(newNode);
+      } else if ( item.split('_')[0] === key.split('_')[1] ){
+        const node = keys.filter(f => f !== item);
+        const newNode = {...service[item], children: this.getJsonTree(node, item, service)};
         itemArr.push(newNode);
       }
     });

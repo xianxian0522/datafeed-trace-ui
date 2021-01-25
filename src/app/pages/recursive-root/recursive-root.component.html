@@ -9,8 +9,8 @@
 <!--            <span class="span-tree-offset-indentGuide"></span>-->
           </span>
             <a style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
-              <span class="span-svc-name">{{node.title}}</span>
-              <small class="endpoint-name">{{node.subTitle}}</small>
+              <span class="span-svc-name">{{node.name}}</span>
+              <small class="endpoint-name">{{node.name}}</small>
             </a>
           </div>
         </div>
@@ -23,7 +23,7 @@
             <div class="ticks-tick" style="left: 100%"></div>
           </div>
           <div class="span-bar-wrapper">
-            <div class="span-bar" [style.width]="node.width" [style.left]="node.left" style="background: rgb(23, 184, 190);width: 50%;">
+            <div class="span-bar" [style.width]="node.width" [style.left]="node.left" style="background: rgb(23, 184, 190);">
               <div class="span-bar-label is-right">500ms</div>
             </div>
             <div></div>
@@ -47,12 +47,12 @@
           <div class="detail-info-wrapper" style="border-top-color: rgb(23, 184, 190);">
             <div>
               <div class="ub-flex ub-items-center">
-                <h2 class="ub-flex-auto ub-m0">{{node.subTitle}}</h2>
+                <h2 class="ub-flex-auto ub-m0">{{node.name}}</h2>
                 <ul class="labeled-list ub-tx-right-align">
                 <span>
                   <li class="labeled-list-item">
-                    <span class="labeled-list-label">services:</span>
-                    <strong>{{node.title}}</strong>
+                    <span class="labeled-list-label">name:</span>
+                    <strong>{{node.name}}</strong>
                   </li>
                   <li class="labeled-list-item">
                     <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
@@ -60,8 +60,8 @@
                 </span>
                   <span>
                   <li class="labeled-list-item">
-                    <span class="labeled-list-label">duration:</span>
-                    <strong>1s</strong>
+                    <span class="labeled-list-label">requestId:</span>
+                    <strong>{{node.requestId}}</strong>
                   </li>
                   <li class="labeled-list-item">
                     <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
@@ -70,7 +70,7 @@
                   <span>
                   <li class="labeled-list-item">
                     <span class="labeled-list-label">start time:</span>
-                    <strong>0um</strong>
+                    <strong>{{node.startTime | date: 'yyyy-MM-dd HH:mm:ss'}}</strong>
                   </li>
                   <li class="labeled-list-item">
                     <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
