@@ -727,7 +727,7 @@
   </div>
 </div>
 
-
+<!-- 递归实现 拆分 传参 父子组件 -->
 <div class="trace-timeline-viewer">
   <div class="flex-row timeline-headerRow">
     <div style="flex-basis: 25%;max-width: 25%;" class="ub-relative ub-flex ub-px2">
@@ -766,10 +766,10 @@
   </div>
   <div class="virtualized-traceView-spans">
     <div style="position: relative;">
-      <div  *ngFor="let node of nodes; let i = index" id="child">
+      <div  *ngFor="let node of test; let i = index" id="child">
         <div  class="virtualized-traceView-rowsWrapper">
           <div>
-            <div  class="virtualized-traceView-row">
+            <div class="virtualized-traceView-row">
               <div class="flex-row span-row is-expanded">
                 <div style="flex-basis: 25%; max-width: 25%;" class="ub-relative span-name-column">
                   <div class="span-name-wrapper">
@@ -854,6 +854,7 @@
               </div>
             </div>
           </div>
+          <div app-recursive-root *ngIf="node.children" [treeData]="node.children"></div>
         </div>
       </div>
     </div>

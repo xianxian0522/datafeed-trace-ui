@@ -177,6 +177,73 @@ export class JaegerEditComponent implements OnInit {
   isShow = false;
   isShowContent = false;
   traceData: any;
+  test = [
+    {
+      title: 'jaegerClient-root',
+      subTitle: 'span_root',
+      index: 1,
+      children: [
+        {
+          title: 'jaegerClient-r1-1',
+          subTitle: 'span_root3', isLeaf: true, left: '0%', width: '50%',
+          index: 2,
+          children: [
+            {
+              title: 'jaegerClient-r1-1-1', index: 3,
+              subTitle: 'span_root3-1', isLeaf: true, left: '0%', width: '50%',
+              children: [
+                {
+                  title: 'jaegerClient4', index: 4,
+                  subTitle: 'span444', isLeaf: true, left: '0%', width: '50%',
+                }
+              ],
+            },
+            {
+              title: 'jaegerClient-r1-1-2', index: 3,
+              subTitle: 'span_root3-2', isLeaf: true, left: '0%', width: '50%',
+            }
+          ],
+        },
+        {
+          title: 'jaegerClient-r1-2',
+          index: 2,
+          subTitle: 'span_root3', isLeaf: true, left: '0%', width: '50%',
+          children: [
+            {
+              title: 'jaegerClient-r1-2-1', index: 3,
+              subTitle: 'span_root4-1', isLeaf: true, left: '0%', width: '50%',
+            },
+            {
+              title: 'jaegerClient-r1-2-2', index: 3,
+              subTitle: 'span_root4-2', isLeaf: true, left: '0%', width: '50%',
+            }
+          ],
+        }
+      ],
+    },
+    {
+      title: 'jaegerClient-root2',
+      subTitle: 'span_root',
+      index: 1,
+      children: [
+        {
+          title: 'jaegerClient-t1-1', index: 2,
+          subTitle: 'span_root3', isLeaf: true, left: '0%', width: '50%',
+          children: [
+            {
+              title: 'jaegerClient-t1-1-1', index: 3,
+              subTitle: 'span_root4-1', isLeaf: true, left: '0%', width: '50%',
+            },
+            {
+              title: 'jaegerClient-t1-1-2', index: 3,
+              subTitle: 'span_root4-2', isLeaf: true, left: '0%', width: '50%',
+            }
+          ],
+        },
+      ],
+    }
+  ];
+  jaegerData = [];
 
   openFolder(data: NzTreeNode | NzFormatEmitEvent): void {
     // do something if u want
@@ -226,21 +293,26 @@ export class JaegerEditComponent implements OnInit {
           let i = 0;
           if (!key.includes('_')) {
             i++;
+            this.jaegerData = [{...service[key], index: i}];
             const twos = Object.keys(service).filter(k => k !== key);
             twos.map(two => {
               if (two.includes(key)) {
                 i++;
                 console.log(two, i, key, '2');
+                this.jaegerData[0].children = [{...service[two], index: i}];
                 const three = twos.filter(t => t !== two );
                 three.map(th => {
                   if (th.includes(two.split('_')[1])) {
                     i++;
+                    this.jaegerData[0].children[0].children = [{...service[th], index: i}];
                     console.log(th, i, '3');
                     const four = three.filter(f => f !== th);
                     four.map(fo => {
                       if (fo.split('_').includes(th.split('_')[1])) {
                         i++;
+                        this.jaegerData[0].children[0].children[0].children = [{...service[fo], index: i}];
                         console.log(fo, i, '4', th);
+                        console.log(this.jaegerData, 'data');
                       }
                     });
                   }
@@ -251,6 +323,18 @@ export class JaegerEditComponent implements OnInit {
         });
       });
     });
+  }
+
+  getJsonTree(data, preKey, nextKey): any{
+    const itemArr = [];
+    data.map((item, i) => {
+      const node = data[i];
+      if ( node.parentId === preKey ){
+        const newNode = {children: this.getJsonTree(data, node.id, nextKey)};
+        itemArr.push(newNode);
+      }
+    });
+    return itemArr;
   }
 
   showNode(event, i): void {

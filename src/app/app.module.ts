@@ -27,6 +27,7 @@ import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzDatePickerModule} from 'ng-zorro-antd/date-picker';
 import {NzMessageModule} from 'ng-zorro-antd/message';
 import {NzEmptyModule} from 'ng-zorro-antd/empty';
+import { RecursiveRootComponent } from './pages/recursive-root/recursive-root.component';
 
 registerLocaleData(zh);
 
@@ -35,7 +36,8 @@ registerLocaleData(zh);
     AppComponent,
     JaegerComponent,
     JaegerEditComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    RecursiveRootComponent
   ],
   imports: [
     BrowserModule,
