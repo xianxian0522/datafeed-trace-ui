@@ -1,0 +1,133 @@
+<!-- 递归实现 拆分 传参 父子组件 -->
+<div class="trace-timeline-viewer">
+  <div class="flex-row timeline-headerRow">
+    <div style="flex-basis: 25%;max-width: 25%;" class="ub-relative ub-flex ub-px2">
+      <h3 class="timeline-headerRow-title">section & section</h3>
+      <div class="timeline-collapser">
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="down" nzTheme="outline"></i>
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="right" nzTheme="outline"></i>
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="caret-down" nzTheme="outline"></i>
+        <i class="ant-icon timeline-collapser-btn" nz-icon nzType="caret-right" nzTheme="outline"></i>
+      </div>
+    </div>
+    <div style="flex-basis: 75%;max-width: 75%;" class="ub-relative">
+      <div class="timeline-viewing-layer"></div>
+      <div class="ticks">
+        <div style="left: 0%;" class="ticks-tick">
+          <span class="ticks-tickLabel">0ms</span>
+        </div>
+        <div style="left: 25%;" class="ticks-tick">
+          <span class="ticks-tickLabel">{{maxLength * 0.25}}ms</span>
+        </div>
+        <div style="left: 50%;" class="ticks-tick">
+          <span class="ticks-tickLabel">{{maxLength * 0.5}}ms</span>
+        </div>
+        <div style="left: 75%;" class="ticks-tick">
+          <span class="ticks-tickLabel">{{maxLength * 0.75}}ms</span>
+        </div>
+        <div style="left: 100%;" class="ticks-tick">
+          <span class="ticks-tickLabel">{{maxLength}}ms</span>
+        </div>
+      </div>
+    </div>
+    <div class="vertical-resizer">
+      <div style="left: 25%;" class="vertical-resizer-gripIcon"></div>
+      <div style="left: 25%;" class="vertical-resizer-dragger"></div>
+    </div>
+  </div>
+  <div class="virtualized-traceView-spans">
+    <div style="position: relative;">
+      <div  *ngFor="let node of jaegerData; let i = index" id="child">
+        <div  class="virtualized-traceView-rowsWrapper">
+          <div>
+            <div class="virtualized-traceView-row">
+              <div class="flex-row span-row is-expanded">
+                <div style="flex-basis: 25%; max-width: 25%;" class="ub-relative span-name-column">
+                  <div class="span-name-wrapper">
+                    <span class="span-tree-offset">
+                      <span class="span-tree-offset-indentGuide"></span>
+                      <span class="span-tree-offset-iconWrapper">
+                        <i style="vertical-align: middle;" nz-icon nzType="down" nzTheme="outline"></i>
+                      </span>
+                    </span>
+                    <a style="border-color: rgb(23, 184, 190);" class="span-name is-detail-expanded">
+                      <span class="span-svc-name">{{node.name}}</span>
+                      <small class="endpoint-name">{{node.name}}</small>
+                    </a>
+                  </div>
+                </div>
+                <div style="cursor: pointer;flex-basis: 75%;max-width: 75%;" class="ub-relative span-view">
+                  <div class="ticks">
+                    <div class="ticks-tick" style="left: 0%"></div>
+                    <div class="ticks-tick" style="left: 25%"></div>
+                    <div class="ticks-tick" style="left: 50%"></div>
+                    <div class="ticks-tick" style="left: 75%"></div>
+                    <div class="ticks-tick" style="left: 100%"></div>
+                  </div>
+                  <div class="span-bar-wrapper">
+                    <div class="span-bar" [style.width]="node.width" [style.left]="node.left" style="background: rgb(23, 184, 190);">
+                      <div class="span-bar-label is-right">{{node.length}}ms</div>
+                    </div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="virtualized-traceView-row" >
+              <div class="flex-row detail-row">
+                <div class="ub-relative" style="flex-basis: 25%;max-width: 25%;">
+                <span class="span-tree-offset is-parent">
+                  <span class="span-tree-offset-indentGuide"></span>
+                </span>
+                  <span>
+                  <span style="border-color: rgb(23, 184, 190);" class="detail-row-expanded-accent"></span>
+                </span>
+                </div>
+                <div class="ub-relative" style="flex-basis: 75%;max-width: 75%;">
+                  <div class="detail-info-wrapper" style="border-top-color: rgb(23, 184, 190);">
+                    <div>
+                      <div class="ub-flex ub-items-center">
+                        <h2 class="ub-flex-auto ub-m0">{{node.name}}</h2>
+                        <ul class="labeled-list ub-tx-right-align">
+                        <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">name:</span>
+                            <strong>{{node.name}}</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                          <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">requestId:</span>
+                            <strong>{{node.requestId}}</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                          <span>
+                          <li class="labeled-list-item">
+                            <span class="labeled-list-label">start time:</span>
+                            <strong>{{node.startTime | date: 'yyyy-MM-dd HH:mm:ss'}}</strong>
+                          </li>
+                          <li class="labeled-list-item">
+                            <div class="span-detail-divider ant-divider ant-divider-vertical"></div>
+                          </li>
+                        </span>
+                        </ul>
+                      </div>
+                      <div class="span-detail-divider ant-divider-horizontal ub-my1"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div app-recursive-root *ngIf="node.children" [treeData]="node.children"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

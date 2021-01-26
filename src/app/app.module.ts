@@ -28,6 +28,8 @@ import {NzDatePickerModule} from 'ng-zorro-antd/date-picker';
 import {NzMessageModule} from 'ng-zorro-antd/message';
 import {NzEmptyModule} from 'ng-zorro-antd/empty';
 import { RecursiveRootComponent } from './pages/recursive-root/recursive-root.component';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { TraceComponent } from './pages/trace/trace.component';
 
 registerLocaleData(zh);
 
@@ -37,7 +39,8 @@ registerLocaleData(zh);
     JaegerComponent,
     JaegerEditComponent,
     NotFoundComponent,
-    RecursiveRootComponent
+    RecursiveRootComponent,
+    TraceComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +63,7 @@ registerLocaleData(zh);
     NzDatePickerModule,
     NzMessageModule,
     NzEmptyModule,
+    NgxChartsModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]

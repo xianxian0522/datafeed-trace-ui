@@ -4,6 +4,7 @@ import {merge} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {JaegerRepository} from '../../share/services/jaeger.repository';
 import {NzMessageService} from 'ng-zorro-antd/message';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-jaeger',
@@ -16,7 +17,9 @@ export class JaegerComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private jaegerRepository: JaegerRepository,
     private messageService: NzMessageService,
-  ) { }
+  ) {
+    Object.assign(this, {bubbleData: this.bubbleData});
+  }
 
   searchForm = this.fb.group({
     startTime: [null],
@@ -25,6 +28,15 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   });
   @Output() refresh = new EventEmitter();
   jaegerList = [];
+
+  bubbleData: any[] = [];
+  // options
+  yAxisLabel = 'Duration';
+  colorScheme = {
+    domain: ['#96c9cd', '#12939a', '#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+  yScaleMin: number;
+  yScaleMax: number;
 
   ngOnInit(): void {
   }
@@ -50,7 +62,23 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         s._source.timeIsAm = this.timeIsAmOrPm(s._source.createTime);
       });
       this.jaegerList = res;
-      console.log(this.jaegerList);
+      const chart = this.jaegerList.filter(err => !err._source.isError);
+      const chartNum = chart.map(arr => Object.keys(arr._source.allTimeCost).map(key => key));
+      const chartNames = Array.from(new Set([].concat.apply([], chartNum)));
+      const chartValue = chart.map(v => Object.keys(v._source.allTimeCost).map(key => v._source.allTimeCost[key]));
+      const chartValues: number[] = Array.from(new Set([].concat.apply([], chartValue)));
+      this.yScaleMax = Math.max(...chartValues);
+      this.yScaleMin = Math.min(...chartValues);
+      this.bubbleData = chartNames.map((c: string, i) => ({
+        name: c,
+        series: chart.map(n => ({
+          name: n._source.requestId,
+          x: formatDate(n._source.createTime, 'HH:mm:ss', 'zh-Hans'),
+          y: parseFloat(n._source.allTimeCost[c]),
+          r: 20
+        }))
+      }));
+      console.log(this.jaegerList, this.bubbleData);
     }, err => this.messageService.error(err.message));
     this.refresh.emit();
   }

@@ -32,7 +32,21 @@
       </nz-form-control>
     </nz-form-item >
   </div>
-  <div>图表</div>
+  <div style="height: 300px; margin-top: 20px">
+    <ngx-charts-bubble-chart
+        [scheme]="colorScheme"
+        [results]="bubbleData"
+        xAxis="true"
+        yAxis="true"
+        showXAxisLabel="true"
+        showYAxisLabel="false"
+        autoScale="true"
+        [yScaleMin]="yScaleMin"
+        [yScaleMax]="yScaleMax"
+        maxRadius="10"
+        minRadius="5">
+    </ngx-charts-bubble-chart>
+  </div>
   <ul class="jaeger-ub-list-reset">
     <li class="jaeger-ub-my3" *ngFor="let jaeger of jaegerList; let i = index">
       <div class="j-result-item" nz-button>
@@ -60,7 +74,7 @@
                 <span>{{ jaeger._source.createTime | date: 'yyyy-MM-dd' }}</span>
                 <div class="j-ant-divider j-ant-divider-vertical"></div>
               </div>
-              <div>{{ jaeger._source.createTime | date: 'HH:mm:ss' }} {{jaeger._source.timeIsAm}}</div>
+              <div>{{ jaeger._source.createTime | date: 'HH:mm:ss a' }}</div>
               <small>{{ jaeger._source.timeAgo }}</small>
             </div>
           </div>
