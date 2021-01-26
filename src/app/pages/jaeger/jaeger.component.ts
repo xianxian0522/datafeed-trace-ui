@@ -19,8 +19,8 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   ) { }
 
   searchForm = this.fb.group({
-    startTime: [''],
-    endTime: [''],
+    startTime: [null],
+    endTime: [null],
     size: [],
   });
   @Output() refresh = new EventEmitter();

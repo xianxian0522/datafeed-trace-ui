@@ -710,16 +710,16 @@
           <span class="ticks-tickLabel">0ms</span>
         </div>
         <div style="left: 25%;" class="ticks-tick">
-          <span class="ticks-tickLabel">250ms</span>
+          <span class="ticks-tickLabel">{{maxLength * 0.25}}ms</span>
         </div>
         <div style="left: 50%;" class="ticks-tick">
-          <span class="ticks-tickLabel">500ms</span>
+          <span class="ticks-tickLabel">{{maxLength * 0.5}}ms</span>
         </div>
         <div style="left: 75%;" class="ticks-tick">
-          <span class="ticks-tickLabel">750ms</span>
+          <span class="ticks-tickLabel">{{maxLength * 0.75}}ms</span>
         </div>
         <div style="left: 100%;" class="ticks-tick">
-          <span class="ticks-tickLabel">1s</span>
+          <span class="ticks-tickLabel">{{maxLength}}ms</span>
         </div>
       </div>
     </div>
@@ -759,7 +759,7 @@
                   </div>
                   <div class="span-bar-wrapper">
                     <div class="span-bar" [style.width]="node.width" [style.left]="node.left" style="background: rgb(23, 184, 190);">
-                      <div class="span-bar-label is-right">1s</div>
+                      <div class="span-bar-label is-right">{{node.length}}ms</div>
                     </div>
                     <div></div>
                   </div>
