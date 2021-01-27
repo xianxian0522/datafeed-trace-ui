@@ -12,10 +12,67 @@ export class TraceComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private jaegerRepository: JaegerRepository,
-  ) {}
+  ) {
+    Object.assign(this, { multi: this.multi });
+  }
 
   jaegerData = [];
   maxLength = 0;
+
+  multi: any[] = [
+    {
+      name: 'Germany',
+      series: [
+        {
+          name: '1990',
+          value: 62000000
+        },
+        {
+          name: '2010',
+          value: 73000000
+        },
+        {
+          name: '2011',
+          value: 89400000
+        },
+        {
+          name: '1996',
+          value: 62000000
+        },
+        {
+          name: '2016',
+          value: 73000000
+        },
+        {
+          name: '2021',
+          value: 89400000
+        }
+      ]
+    },
+
+    {
+      name: 'USA',
+      series: [
+        {
+          name: '1990',
+          value: 250000000
+        },
+        {
+          name: '2010',
+          value: 309000000
+        },
+        {
+          name: '2011',
+          value: 311000000
+        }
+      ]
+    },
+  ];
+
+  // options
+  colorScheme = {
+    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+  };
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -88,7 +145,7 @@ export class TraceComponent implements OnInit {
 
   getJsonTree(keys, key, service): any{
     const itemArr = [];
-    keys.map((item, i) => {
+    keys.map(item => {
       if (!item.includes('_')) {
         const twos = keys.filter(k => k !== item);
         const newNode = {...service[item], children: this.getJsonTree(twos, item, service)};

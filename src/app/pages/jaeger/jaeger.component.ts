@@ -73,7 +73,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         name: c,
         series: chart.map(n => ({
           name: n._source.requestId,
-          x: formatDate(n._source.createTime, 'HH:mm:ss', 'zh-Hans'),
+          x: (formatDate(n._source.createTime, 'HH:mm:ss', 'zh-Hans')),
           y: parseFloat(n._source.allTimeCost[c]),
           r: 20
         }))
