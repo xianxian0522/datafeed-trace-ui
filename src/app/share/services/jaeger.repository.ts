@@ -21,6 +21,11 @@ export class JaegerRepository {
   queryOneById(id: string): Observable<JaegerResponse> {
     return this.httpClient.get<JaegerResponse>(`${API}/search?requestId=${id}`);
   }
+  queryHostChart(q?: {[key: string]: any}): Observable<any> {
+    const params = this.genParams(q);
+    const requestUrl = `${API}/pic?${params.toString()}`;
+    return this.httpClient.get(requestUrl);
+  }
 
   protected genParams(q?: {[key: string]: any}): URLSearchParams {
     const params = new URLSearchParams();

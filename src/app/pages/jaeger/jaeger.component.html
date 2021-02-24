@@ -1,51 +1,66 @@
 <div class="jaeger-list">
-  <div nz-form nzLayout="inline" [formGroup]="searchForm" class="jaeger-list-header">
-    <button nz-button nzType="primary" (click)="refresh.emit()">刷新</button>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="10" nzNoColon>数量</nz-form-label>
-      <nz-form-control [nzSpan]="14">
-        <input nz-input formControlName="size" placeholder="size" nzSize="small">
-      </nz-form-control>
-    </nz-form-item >
-    <nz-form-item>
-      <nz-form-label [nzSpan]="10" nzNoColon>开始时间</nz-form-label>
-      <nz-form-control [nzSpan]="18">
-        <nz-date-picker
-            nzSize="small"
-            nzShowTime
-            nzFormat="yyyy-MM-dd HH:mm:ss"
-            formControlName="startTime"
-            nzPlaceHolder="startTime"
-        ></nz-date-picker>
-      </nz-form-control>
-    </nz-form-item >
-    <nz-form-item>
-      <nz-form-label [nzSpan]="10" nzNoColon>结束时间</nz-form-label>
-      <nz-form-control [nzSpan]="18">
-        <nz-date-picker
-            nzSize="small"
-            nzShowTime
-            nzFormat="yyyy-MM-dd HH:mm:ss"
-            formControlName="endTime"
-            nzPlaceHolder="endTime"
-        ></nz-date-picker>
-      </nz-form-control>
-    </nz-form-item >
+  <div style="display: flex;">
+    <div nz-form nzLayout="inline" [formGroup]="searchForm" class="jaeger-list-header">
+      <button nz-button nzType="primary" (click)="refresh.emit()">刷新</button>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="10" nzNoColon>数量</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <!--        <input nz-input formControlName="size" placeholder="size" nzSize="small">-->
+          <nz-input-number formControlName="size" nzSize="small" [nzMin]="1" [nzMax]="10000" [nzStep]="1"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item >
+      <nz-form-item>
+        <nz-form-label [nzSpan]="10" nzNoColon>开始时间</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-date-picker
+                  nzSize="small"
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  formControlName="startTime"
+                  nzPlaceHolder="startTime"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item >
+      <nz-form-item>
+        <nz-form-label [nzSpan]="10" nzNoColon>结束时间</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-date-picker
+                  nzSize="small"
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  formControlName="endTime"
+                  nzPlaceHolder="endTime"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item >
+    </div>
+    <div nz-form nzLayout="inline">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="10" nzNoColon>间隔</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-input-number [formControl]="interval" nzSize="small"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item >
+    </div>
   </div>
   <div style="height: 300px; margin-top: 20px">
-    <ngx-charts-bubble-chart
-        [scheme]="colorScheme"
-        [results]="bubbleData"
-        xAxis="true"
-        yAxis="true"
-        showXAxisLabel="true"
-        showYAxisLabel="false"
-        autoScale="true"
-        [yScaleMin]="yScaleMin"
-        [yScaleMax]="yScaleMax"
-        maxRadius="10"
-        minRadius="5">
-    </ngx-charts-bubble-chart>
+<!--  ngx-charts 散点图  -->
+<!--    <ngx-charts-bubble-chart-->
+<!--        [scheme]="colorScheme"-->
+<!--        [results]="bubbleData"-->
+<!--        xAxis="true"-->
+<!--        yAxis="true"-->
+<!--        showXAxisLabel="true"-->
+<!--        showYAxisLabel="false"-->
+<!--        autoScale="true"-->
+<!--        [yScaleMin]="yScaleMin"-->
+<!--        [yScaleMax]="yScaleMax"-->
+<!--        maxRadius="10"-->
+<!--        minRadius="5">-->
+<!--    </ngx-charts-bubble-chart>-->
+
+<!--    echarts 热力图-->
+    <div style="height: 100%;" id="echarts"></div>
   </div>
   <ul class="jaeger-ub-list-reset">
     <li class="jaeger-ub-my3" *ngFor="let jaeger of jaegerList; let i = index">

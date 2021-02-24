@@ -1,10 +1,12 @@
 import {Component, OnInit, EventEmitter, Output, AfterViewInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {merge} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {JaegerRepository} from '../../share/services/jaeger.repository';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {formatDate} from '@angular/common';
+
+import * as echarts from 'echarts';
 
 @Component({
   selector: 'app-jaeger',
@@ -28,6 +30,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   });
   @Output() refresh = new EventEmitter();
   jaegerList = [];
+  interval = new FormControl([]);
 
   bubbleData: any[] = [];
   // options
@@ -37,8 +40,11 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   };
   yScaleMin: number;
   yScaleMax: number;
+  hostChart;
 
   ngOnInit(): void {
+    const chartDom = document.getElementById('echarts');
+    this.hostChart = echarts.init(chartDom);
   }
 
   ngAfterViewInit(): void {
@@ -80,6 +86,116 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       }));
       console.log(this.jaegerList, this.bubbleData);
     }, err => this.messageService.error(err.message));
+
+    merge(this.refresh, this.searchForm.valueChanges, this.interval.valueChanges).pipe(
+        debounceTime(200),
+        switchMap(_ => {
+          const value = {...this.searchForm.value};
+          value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
+          value.endTime = value.endTime ? new Date(value.endTime).getTime() : null;
+          value.interval = this.interval.value;
+          return this.jaegerRepository.queryHostChart(value);
+        }),
+        map(data => {
+          return data.data;
+        })
+    ).subscribe(host => {
+      console.log(host, 'host');
+      const chartData = host ? host : [];
+      let yAxisData = chartData.map(item => {
+        // console.log(item, 'item');
+        return Object.keys(item.countInfo).map(key => key);
+      });
+      yAxisData = Array.from(new Set([].concat.apply([], yAxisData)));
+      const xAxisData = chartData.map(item => {
+        // console.log(item.time, formatDate(item.time, 'yyyy-MM-dd HH:mm:ss', 'zh-Hans'));
+        return formatDate(item.time, 'yyyy-MM-dd HH:mm', 'zh-Hans');
+      });
+      let seriesData = chartData.map(item => {
+        return yAxisData.map(y => {
+          // console.log('x维度，y维度，值', formatDate(item.time, 'MM-dd HH:mm:ss', 'zh-Hans'), y, item.countInfo[y].level);
+          return [formatDate(item.time, 'yyyy-MM-dd HH:mm', 'zh-Hans'), y, item.countInfo[y].level || '-'];
+        });
+      });
+      seriesData = [].concat.apply([], seriesData);
+      console.log(yAxisData, 'y', xAxisData, seriesData);
+
+      const hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a',
+        '7a', '8a', '9a', '10a', '11a',
+        '12p', '1p', '2p', '3p', '4p', '5p',
+        '6p', '7p', '8p', '9p', '10p', '11p'];
+      const days = ['Saturday', 'Friday', 'Thursday',
+        'Wednesday', 'Tuesday', 'Monday', 'Sunday'];
+
+      let datas: any = [[0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0], [0, 4, 0],
+        [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0],
+        [0, 11, 2], [0, 12, 4], [0, 13, 1], [0, 14, 1], [0, 15, 3], [0, 16, 4],
+        [0, 17, 6], [0, 18, 4], [0, 19, 4], [0, 20, 3], [0, 21, 3], [0, 22, 2],
+        [0, 23, 5], [1, 0, 7], [1, 1, 0], [1, 2, 0], [1, 3, 0], [1, 4, 0], [1, 5, 0],
+        [1, 6, 0], [1, 7, 0], [1, 8, 0], [1, 9, 0], [1, 10, 5], [1, 11, 2], [1, 12, 2],
+        [1, 13, 6], [1, 14, 9], [1, 15, 11], [1, 16, 6], [1, 17, 7], [1, 18, 8], [1, 19, 12],
+        [1, 20, 5], [1, 21, 5], [1, 22, 7], [1, 23, 2], [2, 0, 1], [2, 1, 1], [2, 2, 0], [2, 3, 0],
+        [2, 4, 0], [2, 5, 0], [2, 6, 0], [2, 7, 0], [2, 8, 0], [2, 9, 0], [2, 10, 3], [2, 11, 2], [2, 12, 1],
+        [2, 13, 9], [2, 14, 8], [2, 15, 10], [2, 16, 6], [2, 17, 5], [2, 18, 5], [2, 19, 5], [2, 20, 7],
+        [2, 21, 4], [2, 22, 2], [2, 23, 4], [3, 0, 7], [3, 1, 3], [3, 2, 0], [3, 3, 0], [3, 4, 0], [3, 5, 0],
+        [3, 6, 0], [3, 7, 0], [3, 8, 1], [3, 9, 0], [3, 10, 5], [3, 11, 4], [3, 12, 7], [3, 13, 14], [3, 14, 13],
+        [3, 15, 12], [3, 16, 9], [3, 17, 5], [3, 18, 5], [3, 19, 10], [3, 20, 6], [3, 21, 4], [3, 22, 4], [3, 23, 1],
+        [4, 0, 1], [4, 1, 3], [4, 2, 0], [4, 3, 0], [4, 4, 0], [4, 5, 1], [4, 6, 0], [4, 7, 0], [4, 8, 0], [4, 9, 2],
+        [4, 10, 4], [4, 11, 4], [4, 12, 2], [4, 13, 4], [4, 14, 4], [4, 15, 14], [4, 16, 12], [4, 17, 1], [4, 18, 8],
+        [4, 19, 5], [4, 20, 3], [4, 21, 7], [4, 22, 3], [4, 23, 0]];
+      datas = datas.map( (item) => {
+        return [item[1], item[0], item[2] || '-'];
+      });
+      // console.log(datas, 'datas');
+
+      const option = {
+        tooltip: {
+          position: 'top'
+        },
+        grid: {
+          height: '50%',
+          top: '10%'
+        },
+        xAxis: {
+          type: 'category',
+          data: xAxisData,
+          splitArea: { // 显示分隔区域
+            show: true
+          }
+        },
+        yAxis: {
+          type: 'category',
+          data: yAxisData,
+          splitArea: {
+            show: true
+          }
+        },
+        visualMap: {
+          min: 0,
+          max: 10,
+          calculable: true,
+          orient: 'horizontal',
+          left: 'center',
+          bottom: '15%'
+        },
+        series: [{
+          name: 'Punch Card',
+          type: 'heatmap',
+          data: seriesData,
+          label: {
+            show: true
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }]
+      };
+      this.hostChart.setOption(option);
+    });
+
     this.refresh.emit();
   }
 

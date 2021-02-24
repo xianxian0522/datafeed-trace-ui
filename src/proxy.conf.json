@@ -1,6 +1,6 @@
 {
   "/datafeed/api/v1": {
-    "target": "http://172.16.69.114:8081",
+    "target": "http://aaaa.vaiwan.com",
     "secure": false,
     "changeOrigin": true
   }

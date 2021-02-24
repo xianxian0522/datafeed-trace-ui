@@ -30,6 +30,7 @@ import {NzEmptyModule} from 'ng-zorro-antd/empty';
 import { RecursiveRootComponent } from './pages/recursive-root/recursive-root.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { TraceComponent } from './pages/trace/trace.component';
+import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 
 registerLocaleData(zh);
 
@@ -64,6 +65,7 @@ registerLocaleData(zh);
     NzMessageModule,
     NzEmptyModule,
     NgxChartsModule,
+    NzInputNumberModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]
