@@ -31,6 +31,7 @@ import { RecursiveRootComponent } from './pages/recursive-root/recursive-root.co
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { TraceComponent } from './pages/trace/trace.component';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
+import {NzSpinModule} from 'ng-zorro-antd/spin';
 
 registerLocaleData(zh);
 
@@ -66,6 +67,7 @@ registerLocaleData(zh);
     NzEmptyModule,
     NgxChartsModule,
     NzInputNumberModule,
+    NzSpinModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]

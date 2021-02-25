@@ -1,4 +1,4 @@
-import {Component, OnInit, EventEmitter, Output, AfterViewInit} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, AfterViewInit, HostListener} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {merge} from 'rxjs';
 import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
@@ -45,6 +45,12 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const chartDom = document.getElementById('echarts');
     this.hostChart = echarts.init(chartDom);
+  }
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(event): void {
+    // 滑动加载太频繁
+    console.log(event, 'scroll', window);
+    this.refresh.emit();
   }
 
   disabledStartDate = (startValue: Date): boolean => {
