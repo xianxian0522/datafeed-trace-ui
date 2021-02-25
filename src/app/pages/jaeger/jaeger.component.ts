@@ -1,11 +1,11 @@
 import {Component, OnInit, EventEmitter, Output, AfterViewInit} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {merge} from 'rxjs';
-import {debounceTime, map, switchMap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
 import {JaegerRepository} from '../../share/services/jaeger.repository';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {formatDate} from '@angular/common';
-
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import * as echarts from 'echarts';
 
 @Component({
@@ -47,9 +47,50 @@ export class JaegerComponent implements OnInit, AfterViewInit {
     this.hostChart = echarts.init(chartDom);
   }
 
+  disabledStartDate = (startValue: Date): boolean => {
+    // 七天以前不可选 结束时间要小于开始时间不可选
+    const endValue = new Date(this.searchForm.get('endTime').value).getTime();
+    if (endValue) {
+      return differenceInCalendarDays(startValue, new Date()) < -6 || startValue.getTime() > endValue;
+    }
+    return differenceInCalendarDays(startValue, new Date()) < -6;
+  }
+  disabledEndDate = (endValue: Date): boolean => {
+    const startValue = new Date(this.searchForm.get('startTime').value).getTime();
+    if (startValue) {
+      return differenceInCalendarDays(endValue, new Date()) < -6 || endValue.getTime() <= startValue;
+    }
+    return differenceInCalendarDays(endValue, new Date()) < -6;
+  }
+  searchFormValueFilter(): boolean {
+    // 过滤掉开始时间结束时间不是24小时内的
+    const value = {...this.searchForm.value};
+    if (!value.endTime && !value.startTime) {
+      return true;
+    }
+    if (!value.endTime) {
+      const time = new Date().getTime() - new Date(value.startTime).getTime();
+      const oneDay = 24 * 60 * 60 * 1000;
+      if (oneDay < time) {
+        this.messageService.info('开始时间结束时间的时间间隔不能超过24小时');
+      }
+      return oneDay > time;
+    }
+    if (value.endTime && value.startTime) {
+      const time = new Date(value.endTime).getTime() - new Date(value.startTime).getTime();
+      const oneDay = 24 * 60 * 60 * 1000;
+      if (oneDay < time) {
+        this.messageService.info('开始时间结束时间的时间间隔不能超过24小时');
+      }
+      return oneDay > time;
+    }
+    return true;
+  }
+
   ngAfterViewInit(): void {
     merge(this.refresh, this.searchForm.valueChanges).pipe(
       debounceTime(200),
+      filter(_ => this.searchFormValueFilter()),
       switchMap(_ => {
         const value = {...this.searchForm.value};
         value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
@@ -60,14 +101,15 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         return d.data;
       })
     ).subscribe(res => {
-      res.map(s => {
+      const data: any = res ? res : [];
+      data.map(s => {
         s._source.allTimeCostArr = Object.keys(s._source.allTimeCost).map(key => {
           return {name: key, value: s._source.allTimeCost[key]};
         });
         s._source.timeAgo = this.timeFormat(s._source.createTime);
         s._source.timeIsAm = this.timeIsAmOrPm(s._source.createTime);
       });
-      this.jaegerList = res;
+      this.jaegerList = data;
       // 计算 ngx-charts 散点图的数据
       // const chart = this.jaegerList.filter(err => !err._source.isError);
       // const chartNum = chart.map(arr => Object.keys(arr._source.allTimeCost).map(key => key));
@@ -87,12 +129,13 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       // }));
       // console.log(this.jaegerList, this.bubbleData);
     }, err => {
-      this.messageService.error(err.message);
+      this.messageService.error(err.error.message || err.message);
       // console.log(err, 'cuo');
     });
 
     merge(this.refresh, this.searchForm.valueChanges, this.interval.valueChanges).pipe(
         debounceTime(200),
+        filter(_ => this.searchFormValueFilter()),
         switchMap(_ => {
           const value = {...this.searchForm.value};
           value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
