@@ -1,18 +1,21 @@
 export interface Jaeger {
-  data?: [
-    {
-      _source?: {
-        allTimeCost?: {[key: string]: number};
-        allTimeCostArr?: {}[];
-        timeAgo?: string;
-        createTime?: number;
-        requestId?: string;
-        timeIsAm?: string;
-        isError?: boolean;
-        message?: string;
+  data?: {
+    total: {value: number};
+    hits?: [
+      {
+        _source?: {
+          allTimeCost?: {[key: string]: number};
+          allTimeCostArr?: {}[];
+          timeAgo?: string;
+          createTime?: number;
+          requestId?: string;
+          timeIsAm?: string;
+          isError?: boolean;
+          message?: string;
+        }
       }
-    }
-  ];
+    ];
+  };
   message?: string;
 }
 

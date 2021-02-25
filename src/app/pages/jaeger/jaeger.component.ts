@@ -104,10 +104,11 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         return this.jaegerRepository.queryAll(value);
       }),
       map(d => {
-        return d.data;
+        return d.data.hits;
       })
     ).subscribe(res => {
-      const data: any = res ? res : [];
+      console.log(res, 'res');
+      const data = res;
       data.map(s => {
         s._source.allTimeCostArr = Object.keys(s._source.allTimeCost).map(key => {
           return {name: key, value: s._source.allTimeCost[key]};
@@ -115,7 +116,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         s._source.timeAgo = this.timeFormat(s._source.createTime);
         s._source.timeIsAm = this.timeIsAmOrPm(s._source.createTime);
       });
-      this.jaegerList = data;
+      this.jaegerList = this.jaegerList.concat(data);
       // 计算 ngx-charts 散点图的数据
       // const chart = this.jaegerList.filter(err => !err._source.isError);
       // const chartNum = chart.map(arr => Object.keys(arr._source.allTimeCost).map(key => key));
