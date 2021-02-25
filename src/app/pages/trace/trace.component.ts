@@ -135,9 +135,13 @@ export class TraceComponent implements OnInit {
       if (this.maxLength === 0) {
         item.width = '0%';
         item.left = '0%';
+        item.widthGap = '0px';
+        item.leftGap = '0%';
       } else {
         item.width = (item.length / this.maxLength) * 100 + '%';
         item.left = (item.firstToNowGap / this.maxLength) * 100 + '%';
+        item.widthGap = item.lastServiceGap + 'px';
+        item.leftGap = ((item.firstToNowGap - item.lastServiceGap) / this.maxLength) * 100 + '%';
       }
       this.setIndex(item.children, index + 1);
     });

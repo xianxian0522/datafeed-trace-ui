@@ -126,6 +126,11 @@
 .span-bar-label.is-right {
   left: 100%;
 }
+.span-bar-label.is-top-left {
+  z-index: 1;
+  top: -10px;
+  //left: -18px;
+}
 .detail-row-expanded-accent {
   cursor: pointer;
   height: 100%;

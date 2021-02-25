@@ -66,6 +66,10 @@
                     <div class="ticks-tick" style="left: 100%"></div>
                   </div>
                   <div class="span-bar-wrapper">
+                    <!-- 离上下两个的间距 -->
+                    <div class="span-bar" [style.width]="node.widthGap" [style.left]="node.leftGap" style="background: #bf444c;">
+                      <div class="span-bar-label is-top-left">{{node.lastServiceGap}}ms</div>
+                    </div>
                     <div class="span-bar" [style.width]="node.width" [style.left]="node.left" style="background: rgb(23, 184, 190);">
                       <div class="span-bar-label is-right">{{node.length}}ms</div>
                     </div>
