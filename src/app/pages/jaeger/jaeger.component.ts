@@ -20,7 +20,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
     private jaegerRepository: JaegerRepository,
     private messageService: NzMessageService,
   ) {
-    Object.assign(this, {bubbleData: this.bubbleData});
+    Object.assign(this, {bubbleData: this.bubbleData, multi: this.multi});
   }
 
   searchForm = this.fb.group({
@@ -32,15 +32,15 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   jaegerList = [];
   interval = new FormControl([]);
 
+  hostChart;
+
   bubbleData: any[] = [];
-  // options
-  yAxisLabel = 'Duration';
+  multi: any[] = [];
   colorScheme = {
     domain: ['#96c9cd', '#12939a', '#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
   yScaleMin: number;
   yScaleMax: number;
-  hostChart;
 
   ngOnInit(): void {
     const chartDom = document.getElementById('echarts');
@@ -68,24 +68,28 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         s._source.timeIsAm = this.timeIsAmOrPm(s._source.createTime);
       });
       this.jaegerList = res;
-      const chart = this.jaegerList.filter(err => !err._source.isError);
-      const chartNum = chart.map(arr => Object.keys(arr._source.allTimeCost).map(key => key));
-      const chartNames = Array.from(new Set([].concat.apply([], chartNum)));
-      const chartValue = chart.map(v => Object.keys(v._source.allTimeCost).map(key => v._source.allTimeCost[key]));
-      const chartValues: number[] = Array.from(new Set([].concat.apply([], chartValue)));
-      this.yScaleMax = Math.max(...chartValues);
-      this.yScaleMin = Math.min(...chartValues);
-      this.bubbleData = chartNames.map((c: string, i) => ({
-        name: c,
-        series: chart.map(n => ({
-          name: n._source.requestId,
-          x: (formatDate(n._source.createTime, 'HH:mm:ss', 'zh-Hans')),
-          y: parseFloat(n._source.allTimeCost[c]),
-          r: 20
-        }))
-      }));
-      console.log(this.jaegerList, this.bubbleData);
-    }, err => this.messageService.error(err.message));
+      // 计算 ngx-charts 散点图的数据
+      // const chart = this.jaegerList.filter(err => !err._source.isError);
+      // const chartNum = chart.map(arr => Object.keys(arr._source.allTimeCost).map(key => key));
+      // const chartNames = Array.from(new Set([].concat.apply([], chartNum)));
+      // const chartValue = chart.map(v => Object.keys(v._source.allTimeCost).map(key => v._source.allTimeCost[key]));
+      // const chartValues: number[] = Array.from(new Set([].concat.apply([], chartValue)));
+      // this.yScaleMax = Math.max(...chartValues);
+      // this.yScaleMin = Math.min(...chartValues);
+      // this.bubbleData = chartNames.map((c: string, i) => ({
+      //   name: c,
+      //   series: chart.map(n => ({
+      //     name: n._source.requestId,
+      //     x: (formatDate(n._source.createTime, 'HH:mm:ss', 'zh-Hans')),
+      //     y: parseFloat(n._source.allTimeCost[c]),
+      //     r: 20
+      //   }))
+      // }));
+      // console.log(this.jaegerList, this.bubbleData);
+    }, err => {
+      this.messageService.error(err.message);
+      // console.log(err, 'cuo');
+    });
 
     merge(this.refresh, this.searchForm.valueChanges, this.interval.valueChanges).pipe(
         debounceTime(200),
@@ -102,11 +106,13 @@ export class JaegerComponent implements OnInit, AfterViewInit {
     ).subscribe(host => {
       console.log(host, 'host');
       const chartData = host ? host : [];
+
       let yAxisData = chartData.map(item => {
         // console.log(item, 'item');
         return Object.keys(item.countInfo).map(key => key);
       });
       yAxisData = Array.from(new Set([].concat.apply([], yAxisData)));
+      // yAxisData = Array.from(new Set([].concat.apply([], yAxisData))).sort((a: number, b: number) => (a - b));
       const xAxisData = chartData.map(item => {
         // console.log(item.time, formatDate(item.time, 'yyyy-MM-dd HH:mm:ss', 'zh-Hans'));
         return formatDate(item.time, 'yyyy-MM-dd HH:mm', 'zh-Hans');
@@ -118,7 +124,14 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         });
       });
       seriesData = [].concat.apply([], seriesData);
-      console.log(yAxisData, 'y', xAxisData, seriesData);
+      // console.log(yAxisData, 'y', xAxisData, seriesData);
+
+      // ngx-charts 热图的数据
+      // this.multi = chartData.map(m => ({
+      //   name: formatDate(m.time, 'yyyy-MM-dd HH:mm', 'zh-Hans'),
+      //   series: yAxisData.map(y => ({name: y, value: m.countInfo[y].level}))
+      // }));
+      // console.log(this.multi, 'multi');
 
       const hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a',
         '7a', '8a', '9a', '10a', '11a',
@@ -179,7 +192,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
           bottom: '15%'
         },
         series: [{
-          name: 'Punch Card',
+          name: 'jaeger',
           type: 'heatmap',
           data: seriesData,
           label: {
