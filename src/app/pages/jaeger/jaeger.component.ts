@@ -107,6 +107,10 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       debounceTime(200),
       filter(_ => this.searchFormValueFilter()),
       switchMap(_ => {
+        // 查询条件改变时 page从第一页开始
+        if (_ !== undefined) {
+          this.page = 1;
+        }
         this.isLoadingEnd = false;
         const value = {...this.searchForm.value};
         value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
@@ -128,10 +132,11 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         s._source.timeAgo = this.timeFormat(s._source.createTime);
         s._source.timeIsAm = this.timeIsAmOrPm(s._source.createTime);
       });
-      if (this.page === 1) {
-        this.jaegerList = data;
-      } else {
+      if (this.dropDownServices.calculation() && !this.isLoadingEnd) {
+        // 当page改变时 数据concat
         this.jaegerList = this.jaegerList.concat(data);
+      } else {
+        this.jaegerList = data;
       }
       console.log(this.jaegerList.length, 'length');
       if (this.jaegerList.length === this.total) {
@@ -197,7 +202,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       let seriesData = chartData.map(item => {
         return yAxisData.map(y => {
           // console.log('x维度，y维度，值', formatDate(item.time, 'MM-dd HH:mm:ss', 'zh-Hans'), y, item.countInfo[y].level);
-          return [formatDate(item.time, 'yyyy-MM-dd HH:mm', 'zh-Hans'), y, item.countInfo[y].level || '-'];
+          return [formatDate(item.time, 'yyyy-MM-dd HH:mm', 'zh-Hans'), y, (item.countInfo[y] && item.countInfo[y].level) || '-'];
         });
       });
       seriesData = [].concat.apply([], seriesData);
