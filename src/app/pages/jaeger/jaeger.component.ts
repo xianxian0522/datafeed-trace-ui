@@ -7,6 +7,7 @@ import {NzMessageService} from 'ng-zorro-antd/message';
 import {formatDate} from '@angular/common';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import * as echarts from 'echarts';
+import {DropDownServices} from '../../share/services/drop-down.services';
 
 @Component({
   selector: 'app-jaeger',
@@ -19,6 +20,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private jaegerRepository: JaegerRepository,
     private messageService: NzMessageService,
+    private dropDownServices: DropDownServices,
   ) {
     Object.assign(this, {bubbleData: this.bubbleData, multi: this.multi});
   }
@@ -31,6 +33,9 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   @Output() refresh = new EventEmitter();
   jaegerList = [];
   interval = new FormControl([]);
+  isLoadingEnd = false;
+  page = 1;
+  total = 1;
 
   hostChart;
 
@@ -48,9 +53,13 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   }
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(event): void {
-    // 滑动加载太频繁
-    console.log(event, 'scroll', window);
-    this.refresh.emit();
+    const isEnd = this.dropDownServices.calculation();
+    // console.log(event, 'scroll', isEnd);
+    if (isEnd && !this.isLoadingEnd) {
+      console.log('加载中');
+      ++this.page;
+      this.refresh.emit();
+    }
   }
 
   disabledStartDate = (startValue: Date): boolean => {
@@ -98,16 +107,19 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       debounceTime(200),
       filter(_ => this.searchFormValueFilter()),
       switchMap(_ => {
+        this.isLoadingEnd = false;
         const value = {...this.searchForm.value};
         value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
         value.endTime = value.endTime ? new Date(value.endTime).getTime() : null;
+        value.page = this.page;
         return this.jaegerRepository.queryAll(value);
       }),
       map(d => {
+        this.total = d.data.total.value;
         return d.data.hits;
       })
     ).subscribe(res => {
-      console.log(res, 'res');
+      // console.log(res, 'res');
       const data = res;
       data.map(s => {
         s._source.allTimeCostArr = Object.keys(s._source.allTimeCost).map(key => {
@@ -116,7 +128,16 @@ export class JaegerComponent implements OnInit, AfterViewInit {
         s._source.timeAgo = this.timeFormat(s._source.createTime);
         s._source.timeIsAm = this.timeIsAmOrPm(s._source.createTime);
       });
-      this.jaegerList = this.jaegerList.concat(data);
+      if (this.page === 1) {
+        this.jaegerList = data;
+      } else {
+        this.jaegerList = this.jaegerList.concat(data);
+      }
+      console.log(this.jaegerList.length, 'length');
+      if (this.jaegerList.length === this.total) {
+        console.log('deng');
+        this.isLoadingEnd = true;
+      }
       // 计算 ngx-charts 散点图的数据
       // const chart = this.jaegerList.filter(err => !err._source.isError);
       // const chartNum = chart.map(arr => Object.keys(arr._source.allTimeCost).map(key => key));
@@ -136,13 +157,19 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       // }));
       // console.log(this.jaegerList, this.bubbleData);
     }, err => {
-      this.messageService.error(err.error.message || err.message);
       // console.log(err, 'cuo');
+      this.messageService.error(err.error.message || err.message);
     });
 
     merge(this.refresh, this.searchForm.valueChanges, this.interval.valueChanges).pipe(
         debounceTime(200),
         filter(_ => this.searchFormValueFilter()),
+        filter(_ => {
+          if (this.page === 1) {
+            return true;
+          }
+          return false;
+        }),
         switchMap(_ => {
           const value = {...this.searchForm.value};
           value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
