@@ -112,4 +112,5 @@
     </li>
   </ul>
   <nz-empty nzNotFoundImage="simple" *ngIf="jaegerList.length === 0;"></nz-empty>
+  <div *ngIf="isLoadingEnd" class="footer-content">没有更多内容了</div>
 </div>
