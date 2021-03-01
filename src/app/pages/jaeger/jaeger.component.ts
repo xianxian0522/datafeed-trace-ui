@@ -32,7 +32,6 @@ export class JaegerComponent implements OnInit, AfterViewInit {
   });
   @Output() refresh = new EventEmitter();
   jaegerList = [];
-  interval = new FormControl([]);
   isLoadingEnd = false;
   page = 1;
   total = 1;
@@ -166,7 +165,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
       this.messageService.error(err.error.message || err.message);
     });
 
-    merge(this.refresh, this.searchForm.valueChanges, this.interval.valueChanges).pipe(
+    merge(this.refresh, this.searchForm.valueChanges).pipe(
         debounceTime(200),
         filter(_ => this.searchFormValueFilter()),
         filter(_ => {
@@ -179,7 +178,6 @@ export class JaegerComponent implements OnInit, AfterViewInit {
           const value = {...this.searchForm.value};
           value.startTime = value.startTime ? new Date(value.startTime).getTime() : null;
           value.endTime = value.endTime ? new Date(value.endTime).getTime() : null;
-          value.interval = this.interval.value;
           return this.jaegerRepository.queryHostChart(value);
         }),
         map(data => {
