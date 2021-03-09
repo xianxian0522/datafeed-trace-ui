@@ -32,6 +32,7 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import { TraceComponent } from './pages/trace/trace.component';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
+import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 
 registerLocaleData(zh);
 
@@ -68,6 +69,7 @@ registerLocaleData(zh);
     NgxChartsModule,
     NzInputNumberModule,
     NzSpinModule,
+    NzCheckboxModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]

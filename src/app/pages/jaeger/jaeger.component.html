@@ -34,6 +34,12 @@
         ></nz-date-picker>
       </nz-form-control>
     </nz-form-item >
+    <nz-form-item>
+      <nz-form-label [nzSpan]="18" nzNoColon>特殊记录</nz-form-label>
+      <nz-form-control [nzSpan]="10">
+        <label nz-checkbox formControlName="isIgnore"></label>
+      </nz-form-control>
+    </nz-form-item >
   </div>
   <div style="height: 300px; margin-top: 20px">
 <!--  ngx-charts 散点图  -->

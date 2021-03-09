@@ -29,6 +29,7 @@ export class JaegerComponent implements OnInit, AfterViewInit {
     startTime: [null],
     endTime: [null],
     size: [],
+    isIgnore: [false],
   });
   @Output() refresh = new EventEmitter();
   jaegerList = [];
